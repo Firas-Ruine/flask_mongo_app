@@ -1,0 +1,16 @@
+{% extends "base.html" %} {% block content %}
+<h1 class="mb-4">Generate Data</h1>
+<div class="input-group mb-3">
+  <input
+    type="number"
+    id="num-records"
+    class="form-control"
+    placeholder="Enter number of records"
+    min="1"
+  />
+  <button class="btn btn-warning" onclick="generateData()">
+    Generate Data
+  </button>
+</div>
+<p id="data-status"></p>
+{% endblock %}

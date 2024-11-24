@@ -1,0 +1,12 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mt-5">
+  <h1>MongoDB Status</h1>
+  <div class="alert" id="mongo-status" role="alert"></div>
+  <button class="btn btn-primary" onclick="checkMongo()">
+    Check MongoDB Status
+  </button>
+  <button class="btn btn-warning" onclick="reconnectMongo()">
+    Reconnect to MongoDB
+  </button>
+</div>
+{% endblock %}
