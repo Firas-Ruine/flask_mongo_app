@@ -5,7 +5,13 @@ const showAlert = (id, message, type = "info") => {
     element.classList.remove("d-none");
 };
 
-// Show status messages in the UI
+document.addEventListener("DOMContentLoaded", () => {
+    if (window.location.pathname === "/list") {
+        fetchData(1);
+    }
+});
+
+
 const showMongoStatus = (message, type) => {
     const statusDiv = document.getElementById('mongo-status');
     statusDiv.className = `alert alert-${type}`;
