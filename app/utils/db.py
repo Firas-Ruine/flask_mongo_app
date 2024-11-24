@@ -10,7 +10,7 @@ def get_db():
     global client
     if not client:
         client = MongoClient(os.getenv("MONGO_URI", "mongodb://localhost:27017/"))
-    db_name = os.getenv("DB_NAME", "flask_db")
+    db_name = os.getenv("DB_NAME", "eshop")
     return client[db_name]
 
 def reconnect_db():
