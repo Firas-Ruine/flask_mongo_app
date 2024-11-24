@@ -3,10 +3,21 @@ networks:
     external: true
 
 volumes:
-  mongodb_data:
   flask_logs:
+  mongodb_router01_data:
+  mongodb_router02_data:
+  mongodb_configsvr01_data:
+  mongodb_configsvr02_data:
+  mongodb_configsvr03_data:
+  mongodb_shard01_a_data:
+  mongodb_shard01_b_data:
+  mongodb_shard01_c_data:
+  mongodb_shard02_a_data:
+  mongodb_shard02_b_data:
+  mongodb_shard02_c_data:
 
 services:
+  # Flask Application
   flask-app:
     build:
       context: .
@@ -19,21 +30,126 @@ services:
     networks:
       - app_network
     depends_on:
-      - mongodb
+      - router01
     volumes:
       - ./logs:/app/logs
       - ./data:/app/data
+    restart: always
 
-  mongodb:
-    build:
-      context: .
-      dockerfile: docker/mongodb/Dockerfile
-    image: mongo:6.0
-    container_name: mongodb
+  # MongoDB Routers
+  router01:
+    image: mongo:latest
+    container_name: router01
+    command: mongos --port 27017 --configdb rs-config-server/configsvr01:27017,configsvr02:27017,configsvr03:27017 --bind_ip_all
     ports:
-      - "27017:27017"
+      - "27117:27017"
     networks:
       - app_network
     volumes:
-      - mongodb_data:/data/db
+      - mongodb_router01_data:/data/db
+    restart: always
+
+  router02:
+    image: mongo:latest
+    container_name: router02
+    command: mongos --port 27017 --configdb rs-config-server/configsvr01:27017,configsvr02:27017,configsvr03:27017 --bind_ip_all
+    ports:
+      - "27118:27017"
+    networks:
+      - app_network
+    volumes:
+      - mongodb_router02_data:/data/db
+    restart: always
+
+  # MongoDB Config Servers
+  configsvr01:
+    image: mongo:latest
+    container_name: configsvr01
+    command: mongod --port 27017 --configsvr --replSet rs-config-server
+    networks:
+      - app_network
+    volumes:
+      - mongodb_configsvr01_data:/data/db
+    restart: always
+
+  configsvr02:
+    image: mongo:latest
+    container_name: configsvr02
+    command: mongod --port 27017 --configsvr --replSet rs-config-server
+    networks:
+      - app_network
+    volumes:
+      - mongodb_configsvr02_data:/data/db
+    restart: always
+
+  configsvr03:
+    image: mongo:latest
+    container_name: configsvr03
+    command: mongod --port 27017 --configsvr --replSet rs-config-server
+    networks:
+      - app_network
+    volumes:
+      - mongodb_configsvr03_data:/data/db
+    restart: always
+
+  # MongoDB Shard 01
+  shard01-a:
+    image: mongo:latest
+    container_name: shard01-a
+    command: mongod --port 27017 --shardsvr --replSet rs-shard-01
+    networks:
+      - app_network
+    volumes:
+      - mongodb_shard01_a_data:/data/db
+    restart: always
+
+  shard01-b:
+    image: mongo:latest
+    container_name: shard01-b
+    command: mongod --port 27017 --shardsvr --replSet rs-shard-01
+    networks:
+      - app_network
+    volumes:
+      - mongodb_shard01_b_data:/data/db
+    restart: always
+
+  shard01-c:
+    image: mongo:latest
+    container_name: shard01-c
+    command: mongod --port 27017 --shardsvr --replSet rs-shard-01
+    networks:
+      - app_network
+    volumes:
+      - mongodb_shard01_c_data:/data/db
+    restart: always
+
+  # MongoDB Shard 02
+  shard02-a:
+    image: mongo:latest
+    container_name: shard02-a
+    command: mongod --port 27017 --shardsvr --replSet rs-shard-02
+    networks:
+      - app_network
+    volumes:
+      - mongodb_shard02_a_data:/data/db
+    restart: always
+
+  shard02-b:
+    image: mongo:latest
+    container_name: shard02-b
+    command: mongod --port 27017 --shardsvr --replSet rs-shard-02
+    networks:
+      - app_network
+    volumes:
+      - mongodb_shard02_b_data:/data/db
+    restart: always
+
+  shard02-c:
+    image: mongo:latest
+    container_name: shard02-c
+    command: mongod --port 27017 --shardsvr --replSet rs-shard-02
+    networks:
+      - app_network
+    volumes:
+      - mongodb_shard02_c_data:/data/db
     restart: always
