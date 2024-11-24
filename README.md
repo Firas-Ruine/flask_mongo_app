@@ -1,165 +1,165 @@
-# Mongo Flask Project
+## **1. Présentation du projet**
 
-This project is a **Dockerized Flask application** integrated with **MongoDB**, designed for a modular, scalable architecture. The application supports data cleaning, insertion, and API routes for managing data.
-
----
-
-## Features
-
-- **Flask Framework:** Lightweight and modular backend.
-- **MongoDB Integration:** Handles data storage with sharding and replication ready.
-- **Data Cleaning:** Processes raw datasets before storing them in the database.
-- **Dockerized Infrastructure:** Simplifies deployment and ensures consistency.
-- **Modular Architecture:** Clear separation of routes, services, and utilities for maintainability.
-- **Health Check API:** Quickly verify the application status.
+Ce projet met en œuvre une architecture distribuée pour MongoDB avec sharding et réplication, intégrée avec une application Flask. L'objectif est de créer un système évolutif, performant et tolérant aux pannes. Une interface utilisateur moderne est également incluse pour faciliter l'interaction avec la base de données.
 
 ---
 
-## Project Structure
+## **2. Objectifs**
 
-```
-mongo_flask_project/
-├── app/
-│   ├── __init__.py            # Flask Application Factory
-│   ├── routes/
-│   │   ├── __init__.py        # Blueprint Initialization
-│   │   ├── data_routes.py     # Routes for API Endpoints
-│   │   ├── healthcheck.py     # Health Check Endpoints
-│   ├── services/
-│   │   ├── __init__.py        # Service Initialization
-│   │   ├── data_service.py    # Business Logic for Data Operations
-│   ├── models/
-│   │   ├── __init__.py        # Models Initialization
-│   │   ├── transaction_model.py # Transaction Schema (Optional, for validation)
-│   ├── utils/
-│   │   ├── __init__.py        # Utilities Initialization
-│   │   ├── db.py              # MongoDB Connection
-│   │   ├── data_cleaner.py    # Data Cleaning and Preprocessing Functions
-│   ├── tests/
-│   │   ├── test_routes.py     # Unit Tests for Routes
-│   │   ├── test_services.py   # Unit Tests for Services
-├── data/
-│   ├── raw/                   # Raw Dataset Files
-│   │   ├── data.csv           # Example CSV Dataset
-│   ├── cleaned/               # Cleaned Dataset Files (Optional)
-│       ├── cleaned_data.json
-├── docker/
-│   ├── mongodb/
-│   │   ├── Dockerfile         # MongoDB Dockerfile
-│   ├── flask/
-│       ├── Dockerfile         # Flask Dockerfile
-├── docker-compose.yml         # Docker Compose Configuration
-├── requirements.txt           # Python Dependencies
-├── .env                       # Environment Variables
-├── README.md                  # Project Documentation
-```
+1. **Sharding MongoDB** pour distribuer les données de manière équilibrée entre plusieurs shards.
+2. **Réplication** pour assurer la redondance et la haute disponibilité des données.
+3. **Intégration Flask** pour fournir une interface utilisateur et des API REST pour interagir avec MongoDB.
+4. Automatisation de l'initialisation du cluster MongoDB et de ses configurations.
+5. Création de scripts pour tester le failover et configurer les priorités des membres des replica sets.
 
 ---
 
-## Setup Instructions
+## **3. Architecture**
 
-### 1. Prerequisites
-Ensure you have the following installed:
-- **Docker**: [Install Docker](https://www.docker.com/get-started)
-- **Docker Compose**: [Install Docker Compose](https://docs.docker.com/compose/install/)
-- **Python (Optional)**: For local development.
+### **3.1 Description générale**
 
----
+L'architecture comprend :
 
-### 2. Environment Variables
-
-Create a `.env` file in the root directory with the following content:
-
-```env
-FLASK_ENV=development
-MONGO_URI=mongodb://mongodb:27017/
-DB_NAME=flask_db
-```
+1. **Application Flask** : Fournit l'interface utilisateur (UI) et des API REST.
+2. **Routers MongoDB (mongos)** : Acheminent les requêtes des clients vers les shards appropriés.
+3. **Config Servers** : Conservent les métadonnées du cluster et gèrent la répartition des données (chunks).
+4. **Shards** : Contiennent les données réelles, réparties entre plusieurs noeuds.
 
 ---
 
-### 3. Build and Run the Application
+### **3.2 Diagramme d'architecture**
+![Diagramme de l'architecture du projet](docs/architecture.png)
 
-#### Using Docker Compose
 
-1. **Build the Services**:
+---
+
+### **3.3 Composants du système**
+
+1. **Application Flask** :
+
+   - Fournit un tableau de bord interactif pour l'utilisateur.
+   - Expose des API REST pour les opérations CRUD sur MongoDB.
+
+2. **Routers MongoDB** :
+
+   - Deux routers (`Router01` et `Router02`) pour équilibrer la charge et offrir une haute disponibilité.
+
+3. **Config Server Replica Set** :
+
+   - Trois membres (`configsvr01`, `configsvr02`, `configsvr03`) pour gérer les métadonnées.
+
+4. **Shards avec réplication** :
+
+   - Deux shards (`Shard01`, `Shard02`), chacun configuré avec un replica set (3 nœuds par shard).
+
+5. **Réplication MongoDB** :
+   - Assure la redondance et la tolérance aux pannes.
+   - Gère automatiquement les basculements (failover).
+
+---
+
+## **4. Déploiement**
+
+### **4.1 Prérequis**
+
+1. Installer **Docker** et **Docker Compose**.
+2. Cloner le dépôt du projet :
    ```bash
-   docker-compose build
+   git clone https://github.com/Firas-Ruine/flask_mongo_app.git
+   cd flask_mongo_app
    ```
 
-2. **Start the Containers**:
+### **4.2 Étapes**
+
+1. **Démarrer les conteneurs Docker** :
+
    ```bash
-   docker-compose up
+   docker-compose up --build
    ```
 
-3. **Access the Application**:
-   - **Flask App**: `http://localhost:5000`
-   - **API Health Check**: `http://localhost:5000/api/health`
-   - **Data Routes**: `http://localhost:5000/api/data/test`
+2. **Initialiser le cluster MongoDB** :
 
-4. **Stop the Containers**:
-   ```bash
-   docker-compose down
-   ```
+   - Exécutez les scripts suivants dans l'ordre :
+     ```bash
+     bash scripts/init/config_servers.sh
+     bash scripts/init/shard_servers.sh
+     bash scripts/init/add_shards.sh
+     ```
+
+3. **Vérifier l'état du cluster** :
+   - Connectez-vous au router :
+     ```bash
+     docker exec -it router01 mongosh
+     ```
+   - Vérifiez la configuration :
+     ```javascript
+     sh.status();
+     ```
 
 ---
 
-### 4. MongoDB Integration
+## **5. Fonctionnalités**
 
-You can access the MongoDB instance through a MongoDB client using the connection string:
+### **5.1 MongoDB**
 
-```text
-mongodb://localhost:27017/
-```
+- **Sharding** :
+  - Répartition des données entre les shards pour une scalabilité horizontale.
+- **Réplication** :
+  - Chaque shard et serveur de configuration est un replica set pour assurer la redondance.
+- **Failover automatique** :
+  - Basculer automatiquement sur un noeud secondaire en cas de panne.
 
----
+### **5.2 Application Flask**
 
-### 5. Data Cleaning and Insertion
-
-To clean and insert data from a raw dataset:
-
-1. Place your dataset in the `data/raw/` directory (e.g., `data.csv`).
-2. Trigger the data cleaning and insertion route:
-   ```bash
-   curl -X POST http://localhost:5000/api/data/insert
-   ```
-
----
-
-## Usage
-
-### API Endpoints
-
-| Method | Endpoint                  | Description                       |
-|--------|---------------------------|-----------------------------------|
-| GET    | `/api/health`             | Health check for the application |
-| GET    | `/api/data/test`          | Test data route                  |
-| POST   | `/api/data/insert`        | Clean and insert data into MongoDB |
+- **Interface utilisateur** :
+  - Tableau de bord interactif avec recherche, tri et pagination.
+- **API REST** :
+  - Points de terminaison pour insérer et récupérer des données.
+- **Surveillance MongoDB** :
+  - Vérifier l'état du cluster et tester les basculements.
 
 ---
 
-## Development and Testing
+## **6. Scripts**
 
-1. **Install Dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+### **6.1 Scripts d'initialisation**
 
-2. **Run Flask Locally**:
-   ```bash
-   python run.py
-   ```
+| Nom                 | Description                                           |
+| ------------------- | ----------------------------------------------------- |
+| `config_servers.sh` | Configure les config servers en tant que replica set. |
+| `shard_servers.sh`  | Configure les shards en tant que replica sets.        |
+| `add_shards.sh`     | Ajoute les shards au cluster via les routers.         |
 
-3. **Run Tests**:
-   Add unit tests in the `app/tests/` folder and run them using:
-   ```bash
-   pytest app/tests/
-   ```
+### **6.2 Scripts de réplication**
+
+| Nom                 | Description                                                 |
+| ------------------- | ----------------------------------------------------------- |
+| `set_priorities.sh` | Configure les priorités des noeuds des replica sets.        |
+| `failover_test.sh`  | Simule un basculement (failover) pour tester la redondance. |
+
+### **6.3 Utilitaire**
+
+| Nom                    | Description                                             |
+| ---------------------- | ------------------------------------------------------- |
+| `exec_in_container.sh` | Exécute des commandes MongoDB dans un conteneur Docker. |
 
 ---
 
-## Logs and Volumes
+## **7. Tester le failover**
 
-- Flask logs are stored in the `logs/` directory.
-- MongoDB data is persisted using the `mongodb_data` volume.
 
+1. Exécuter le script de test :
+
+   ```bash
+   bash scripts/replication/failover_test.sh
+   ```
+
+2. Résultats attendus :
+   - Un nouveau noeud primaire est élu automatiquement.
+   - Le noeud redémarré rejoint le cluster comme secondaire.
+
+
+
+## **8. Conclusion**
+
+Le projet implémente une architecture robuste combinant sharding et réplication MongoDB, intégrée avec une application Flask moderne. Il garantit la scalabilité, la haute disponibilité et offre une interface utilisateur intuitive pour interagir avec le système.
