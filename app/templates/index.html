@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-center">Flask Mongo App Dashboard</h1>
+
+<div id="health" class="my-5">
+    <h2>Health Check</h2>
+    <button class="btn btn-primary" onclick="checkHealth()">Check Health</button>
+    <div id="health-status" class="mt-3 alert alert-info d-none"></div>
+</div>
+
+<div id="mongo-health" class="my-5">
+    <h2>MongoDB Health Check</h2>
+    <button class="btn btn-success" onclick="checkMongo()">Check MongoDB Connectivity</button>
+    <div id="mongo-status" class="mt-3 alert alert-info d-none"></div>
+</div>
+
+<div id="data-generator" class="my-5">
+    <h2>Generate Synthetic Data</h2>
+    <div class="input-group mb-3">
+        <input type="number" id="num-records" class="form-control" placeholder="Enter number of records">
+        <button class="btn btn-warning" onclick="generateData()">Generate Data</button>
+    </div>
+    <div id="data-status" class="mt-3 alert alert-info d-none"></div>
+</div>
+
+<div id="data-listing" class="my-5">
+    <h2>Data Listing</h2>
+
+    <!-- Search and Sort Controls -->
+    <div class="mb-3">
+        <input type="text" id="search-keyword" class="form-control mb-2" placeholder="Search by product name">
+        <select id="sort-by" class="form-select mb-2">
+            <option value="purchase_date">Sort by Purchase Date</option>
+            <option value="price">Sort by Price</option>
+            <option value="product_name">Sort by Product Name</option>
+        </select>
+        <select id="sort-order" class="form-select mb-2">
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+        </select>
+        <button class="btn btn-info" onclick="fetchData()">Fetch Data</button>
+    </div>
+
+    <!-- Data Table -->
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Invoice ID</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Purchase Date</th>
+            </tr>
+        </thead>
+        <tbody id="data-table-body">
+            <!-- Data rows will be inserted dynamically -->
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

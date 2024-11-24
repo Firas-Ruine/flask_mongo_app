@@ -1,0 +1,39 @@
+networks:
+  app_network:
+    external: true
+
+volumes:
+  mongodb_data:
+  flask_logs:
+
+services:
+  flask-app:
+    build:
+      context: .
+      dockerfile: docker/flask/Dockerfile
+    container_name: flask-app
+    ports:
+      - "5001:5000"
+    env_file:
+      - .env
+    networks:
+      - app_network
+    depends_on:
+      - mongodb
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+
+  mongodb:
+    build:
+      context: .
+      dockerfile: docker/mongodb/Dockerfile
+    image: mongo:6.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - app_network
+    volumes:
+      - mongodb_data:/data/db
+    restart: always
