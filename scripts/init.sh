@@ -9,53 +9,53 @@ exec_in_container() {
 }
 
 echo "Initializing Config Server Replica Set..."
-exec_in_container configsvr01 "
+exec_in_container mongodb_config1 "
     rs.initiate({
-        _id: 'rs-config-server',
+        _id: 'rs-config',
         configsvr: true,
         members: [
-            { _id: 0, host: 'configsvr01:27017' },
-            { _id: 1, host: 'configsvr02:27017' },
-            { _id: 2, host: 'configsvr03:27017' }
+            { _id: 0, host: 'mongodb_config1:27017' },
+            { _id: 1, host: 'mongodb_config2:27017' },
+            { _id: 2, host: 'mongodb_config3:27017' }
         ]
     });
 "
 echo "Config Server Replica Set initialized."
 
-echo "Initializing Shard 01 Replica Set..."
-exec_in_container shard01-a "
+echo "Initializing Shard 1 Replica Set..."
+exec_in_container mongodb_shard1_node1 "
     rs.initiate({
-        _id: 'rs-shard-01',
+        _id: 'rs-shard1',
         members: [
-            { _id: 0, host: 'shard01-a:27017' },
-            { _id: 1, host: 'shard01-b:27017' },
-            { _id: 2, host: 'shard01-c:27017' }
+            { _id: 0, host: 'mongodb_shard1_node1:27017' },
+            { _id: 1, host: 'mongodb_shard1_node2:27017' },
+            { _id: 2, host: 'mongodb_shard1_node3:27017' }
         ]
     });
 "
-echo "Shard 01 Replica Set initialized."
+echo "Shard 1 Replica Set initialized."
 
-echo "Initializing Shard 02 Replica Set..."
-exec_in_container shard02-a "
+echo "Initializing Shard 2 Replica Set..."
+exec_in_container mongodb_shard2_node1 "
     rs.initiate({
-        _id: 'rs-shard-02',
+        _id: 'rs-shard2',
         members: [
-            { _id: 0, host: 'shard02-a:27017' },
-            { _id: 1, host: 'shard02-b:27017' },
-            { _id: 2, host: 'shard02-c:27017' }
+            { _id: 0, host: 'mongodb_shard2_node1:27017' },
+            { _id: 1, host: 'mongodb_shard2_node2:27017' },
+            { _id: 2, host: 'mongodb_shard2_node3:27017' }
         ]
     });
 "
-echo "Shard 02 Replica Set initialized."
+echo "Shard 2 Replica Set initialized."
 
-echo "Adding shards to the cluster through Router 01..."
-exec_in_container router01 "
-    sh.addShard('rs-shard-01/shard01-a:27017,shard01-b:27017,shard01-c:27017');
-    sh.addShard('rs-shard-02/shard02-a:27017,shard02-b:27017,shard02-c:27017');
+echo "Adding shards to the cluster through Router 1..."
+exec_in_container mongodb_router1 "
+    sh.addShard('rs-shard1/mongodb_shard1_node1:27017,mongodb_shard1_node2:27017,mongodb_shard1_node3:27017');
+    sh.addShard('rs-shard2/mongodb_shard2_node1:27017,mongodb_shard2_node2:27017,mongodb_shard2_node3:27017');
 "
 echo "Shards added to the cluster."
 
-exec_in_container router01 "
+exec_in_container mongodb_router1 "
     sh.status();
 "
 echo "MongoDB Sharded Cluster setup complete."

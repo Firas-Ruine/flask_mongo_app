@@ -2,8 +2,8 @@
 source ../utils/exec_in_container.sh
 
 echo "Adding Shards to the Cluster..."
-exec_in_container router01 "
-    sh.addShard('rs-shard-01/shard01-a:27017,shard01-b:27017,shard01-c:27017');
-    sh.addShard('rs-shard-02/shard02-a:27017,shard02-b:27017,shard02-c:27017');
+exec_in_container mongodb_router1 "
+    sh.addShard('rs-shard1/mongodb_shard1_node1:27017,mongodb_shard1_node2:27017,mongodb_shard1_node3:27017');
+    sh.addShard('rs-shard2/mongodb_shard2_node1:27017,mongodb_shard2_node2:27017,mongodb_shard2_node3:27017');
 "
 echo "Shards added to the cluster."

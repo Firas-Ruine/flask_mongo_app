@@ -1,0 +1,57 @@
+{% extends "base.html" %} {% block content %}
+<h2 class="text-2xl font-bold mb-6">Loans</h2>
+
+<!-- Record Loan Form -->
+<div class="bg-white shadow-md rounded-lg p-6 mb-8">
+  <h3 class="text-xl font-semibold mb-4">Record Loan</h3>
+  <form id="loan-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <input
+      type="text"
+      id="subscriber_id"
+      placeholder="Subscriber ID"
+      required
+      class="p-2 border rounded"
+    />
+    <input
+      type="text"
+      id="document_id"
+      placeholder="Document ID"
+      required
+      class="p-2 border rounded"
+    />
+    <input
+      type="date"
+      id="due_date"
+      placeholder="Due Date"
+      required
+      class="p-2 border rounded col-span-full"
+    />
+    <button
+      type="submit"
+      class="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600 col-span-full"
+    >
+      Record
+    </button>
+  </form>
+</div>
+
+<!-- Loans List -->
+<div class="bg-white shadow-md rounded-lg p-6">
+  <h3 class="text-xl font-semibold mb-4">All Loans</h3>
+  <table class="w-full border-collapse border border-gray-300">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="p-2 border border-gray-300">Subscriber ID</th>
+        <th class="p-2 border border-gray-300">Document ID</th>
+        <th class="p-2 border border-gray-300">Loan Date</th>
+        <th class="p-2 border border-gray-300">Due Date</th>
+        <th class="p-2 border border-gray-300">Status</th>
+      </tr>
+    </thead>
+    <tbody id="loan-list" class="text-sm">
+      <!-- Rows added dynamically -->
+    </tbody>
+  </table>
+</div>
+<script src="/static/js/loans.js"></script>
+{% endblock %}

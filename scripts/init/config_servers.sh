@@ -2,14 +2,14 @@
 source ../utils/exec_in_container.sh
 
 echo "Initializing Config Server Replica Set..."
-exec_in_container configsvr01 "
+exec_in_container mongodb_config1 "
     rs.initiate({
-        _id: 'rs-config-server',
+        _id: 'rs-config',
         configsvr: true,
         members: [
-            { _id: 0, host: 'configsvr01:27017' },
-            { _id: 1, host: 'configsvr02:27017' },
-            { _id: 2, host: 'configsvr03:27017' }
+            { _id: 0, host: 'mongodb_config1:27017' },
+            { _id: 1, host: 'mongodb_config2:27017' },
+            { _id: 2, host: 'mongodb_config3:27017' }
         ]
     });
 "

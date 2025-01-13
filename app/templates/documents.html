@@ -1,0 +1,64 @@
+{% extends "base.html" %} {% block content %}
+<h2 class="text-2xl font-bold mb-6">Documents</h2>
+
+<!-- Add Document Form -->
+<div class="bg-white shadow-md rounded-lg p-6 mb-8">
+  <h3 class="text-xl font-semibold mb-4">Add Document</h3>
+  <form id="document-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <input
+      type="text"
+      id="title"
+      placeholder="Title"
+      required
+      class="p-2 border rounded"
+    />
+    <input
+      type="text"
+      id="author"
+      placeholder="Author"
+      required
+      class="p-2 border rounded"
+    />
+    <input
+      type="text"
+      id="genre"
+      placeholder="Genre"
+      required
+      class="p-2 border rounded"
+    />
+    <input
+      type="number"
+      id="total_copies"
+      placeholder="Total Copies"
+      required
+      class="p-2 border rounded col-span-full"
+    />
+    <button
+      type="submit"
+      class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 col-span-full"
+    >
+      Add
+    </button>
+  </form>
+</div>
+
+<!-- Documents List -->
+<div class="bg-white shadow-md rounded-lg p-6">
+  <h3 class="text-xl font-semibold mb-4">All Documents</h3>
+  <table class="w-full border-collapse border border-gray-300">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="p-2 border border-gray-300">Title</th>
+        <th class="p-2 border border-gray-300">Author</th>
+        <th class="p-2 border border-gray-300">Genre</th>
+        <th class="p-2 border border-gray-300">Total Copies</th>
+        <th class="p-2 border border-gray-300">Available Copies</th>
+      </tr>
+    </thead>
+    <tbody id="document-list" class="text-sm">
+      <!-- Rows added dynamically -->
+    </tbody>
+  </table>
+</div>
+<script src="/static/js/documents.js"></script>
+{% endblock %}

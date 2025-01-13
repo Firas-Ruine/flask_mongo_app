@@ -1,3 +1,5 @@
-from .transaction_model import TransactionModel  # Example model
+from .subscriber import Subscriber
+from .document import Document
+from .loan import Loan
 
-__all__ = ["TransactionModel"]
+__all__ = ["Subscriber", "Document", "Loan"]
