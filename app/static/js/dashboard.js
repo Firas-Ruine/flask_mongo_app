@@ -1,77 +1,82 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Fetch data for the charts (mock data used here, replace with API calls as needed)
-    const fetchData = async () => {
-        return {
-            subscriberGrowth: [50, 100, 150, 200, 250, 300, 350],
-            activeLoans: [20, 30, 25, 40, 50, 60],
-            documentDistribution: {
-                labels: ["Books", "Magazines", "Journals", "DVDs"],
-                data: [40, 20, 15, 25],
-            },
-        };
-    };
+    async function fetchData(url) {
+        try {
+            const response = await fetch(url);
+            return response.json();
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            return null;
+        }
+    }
 
-    fetchData().then((data) => {
+    async function loadCharts() {
+        // Fetch data from APIs
+        const subscriberGrowth = await fetchData("/api/dashboard/subscriber-growth");
+        const activeLoans = await fetchData("/api/dashboard/active-loans");
+        const documentDistribution = await fetchData("/api/dashboard/document-distribution");
+
         // Subscriber Growth Chart
-        const subscriberGrowthCtx = document
-            .getElementById("subscriberGrowthChart")
-            .getContext("2d");
-        new Chart(subscriberGrowthCtx, {
-            type: "line",
-            data: {
-                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-                datasets: [
-                    {
-                        label: "Subscribers",
-                        data: data.subscriberGrowth,
-                        borderColor: "rgb(75, 192, 192)",
-                        tension: 0.3,
-                        fill: true,
-                        backgroundColor: "rgba(75, 192, 192, 0.2)",
-                    },
-                ],
-            },
-        });
+        if (subscriberGrowth) {
+            const ctx = document.getElementById("subscriberGrowthChart").getContext("2d");
+            new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: subscriberGrowth.months,
+                    datasets: [
+                        {
+                            label: "Subscribers",
+                            data: subscriberGrowth.counts,
+                            borderColor: "rgb(75, 192, 192)",
+                            tension: 0.3,
+                            fill: true,
+                            backgroundColor: "rgba(75, 192, 192, 0.2)",
+                        },
+                    ],
+                },
+            });
+        }
 
         // Active Loans Chart
-        const activeLoansCtx = document
-            .getElementById("activeLoansChart")
-            .getContext("2d");
-        new Chart(activeLoansCtx, {
-            type: "bar",
-            data: {
-                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-                datasets: [
-                    {
-                        label: "Active Loans",
-                        data: data.activeLoans,
-                        backgroundColor: "rgb(255, 99, 132)",
-                    },
-                ],
-            },
-        });
+        if (activeLoans) {
+            const ctx = document.getElementById("activeLoansChart").getContext("2d");
+            new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: activeLoans.months,
+                    datasets: [
+                        {
+                            label: "Active Loans",
+                            data: activeLoans.counts,
+                            backgroundColor: "rgb(255, 99, 132)",
+                        },
+                    ],
+                },
+            });
+        }
 
         // Document Distribution Chart
-        const documentDistributionCtx = document
-            .getElementById("documentDistributionChart")
-            .getContext("2d");
-        new Chart(documentDistributionCtx, {
-            type: "doughnut",
-            data: {
-                labels: data.documentDistribution.labels,
-                datasets: [
-                    {
-                        label: "Document Distribution",
-                        data: data.documentDistribution.data,
-                        backgroundColor: [
-                            "rgb(255, 99, 132)",
-                            "rgb(54, 162, 235)",
-                            "rgb(255, 206, 86)",
-                            "rgb(75, 192, 192)",
-                        ],
-                    },
-                ],
-            },
-        });
-    });
+        if (documentDistribution) {
+            const ctx = document.getElementById("documentDistributionChart").getContext("2d");
+            new Chart(ctx, {
+                type: "doughnut",
+                data: {
+                    labels: documentDistribution.labels,
+                    datasets: [
+                        {
+                            label: "Document Distribution",
+                            data: documentDistribution.counts,
+                            backgroundColor: [
+                                "rgb(255, 99, 132)",
+                                "rgb(54, 162, 235)",
+                                "rgb(255, 206, 86)",
+                                "rgb(75, 192, 192)",
+                            ],
+                        },
+                    ],
+                },
+            });
+        }
+    }
+
+    loadCharts();
 });

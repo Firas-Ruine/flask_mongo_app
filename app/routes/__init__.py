@@ -2,5 +2,6 @@ from .subscriber_routes import main as subscriber_routes
 from .document_routes import main as document_routes
 from .loan_routes import main as loan_routes
 from .category_routes import main as category_routes
+from .dashboard_routes import main as dashboard_routes
 
-__all__ = ["subscriber_routes", "document_routes", "loan_routes", "category_routes"]
+__all__ = ["subscriber_routes", "document_routes", "loan_routes", "category_routes", "dashboard_routes"]
