@@ -28,14 +28,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Edit a loan
     window.editLoan = async function (id) {
-        const newSubscriberName = prompt("Enter new subscriber name:");
-        const newDocumentTitle = prompt("Enter new document title:");
-        if (newSubscriberName && newDocumentTitle) {
+        const newStatus = prompt("Enter new status (Pending, Approved, Returned):");
+        if (newStatus) {
             try {
-                await fetchAPI(`/api/loans/${id}`, "PUT", {
-                    subscriber_name: newSubscriberName,
-                    document_title: newDocumentTitle,
-                });
+                await fetchAPI(`/api/loans/${id}`, "PUT", { status: newStatus });
                 alert("Loan updated successfully!");
                 loadLoans();
             } catch (err) {

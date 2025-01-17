@@ -2,26 +2,26 @@
 <h2 class="text-2xl font-bold mb-6">Create Loan</h2>
 <div class="bg-white shadow-md rounded-lg p-6">
   <form id="loan-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <input
-      type="text"
-      id="subscriber_name"
-      placeholder="Subscriber Name"
-      required
-      class="p-2 border rounded"
-    />
-    <input
-      type="text"
-      id="document_title"
-      placeholder="Document Title"
-      required
-      class="p-2 border rounded"
-    />
+    <!-- Subscriber Dropdown -->
+    <select id="subscriber_id" required class="p-2 border rounded">
+      <option value="">Select Subscriber</option>
+      <!-- Options will be populated dynamically -->
+    </select>
+
+    <!-- Document Dropdown -->
+    <select id="document_id" required class="p-2 border rounded">
+      <option value="">Select Document</option>
+      <!-- Options will be populated dynamically -->
+    </select>
+
+    <!-- Loan Status Dropdown -->
     <select id="status" required class="p-2 border rounded col-span-full">
       <option value="">Select Status</option>
       <option value="Pending">Pending</option>
       <option value="Approved">Approved</option>
       <option value="Returned">Returned</option>
     </select>
+
     <button
       type="submit"
       class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 col-span-full"
