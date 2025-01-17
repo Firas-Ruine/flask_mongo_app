@@ -32,10 +32,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Handle form submission
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
+
+        // Collect form data
         const data = {
             subscriber_id: subscriberDropdown.value,
             document_id: documentDropdown.value,
             status: form.status.value,
+            due_date: form.due_date.value,
+            return_date: form.return_date.value || null, // Allow empty return date
         };
 
         try {
