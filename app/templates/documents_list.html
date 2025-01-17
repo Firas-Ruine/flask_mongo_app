@@ -1,0 +1,28 @@
+{% extends "base.html" %} {% block content %}
+<h2 class="text-2xl font-bold mb-6">Documents List</h2>
+<div class="mb-4">
+  <input
+    type="text"
+    id="search-input"
+    placeholder="Search by title, author, or category..."
+    class="p-2 border rounded w-full"
+  />
+</div>
+<div class="bg-white shadow-md rounded-lg p-6">
+  <table class="w-full border-collapse border border-gray-300">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="p-2 border border-gray-300">Title</th>
+        <th class="p-2 border border-gray-300">Author</th>
+        <th class="p-2 border border-gray-300">Category</th>
+        <th class="p-2 border border-gray-300">Actions</th>
+      </tr>
+    </thead>
+    <tbody id="document-list">
+      <!-- Rows will be added dynamically -->
+    </tbody>
+  </table>
+</div>
+<script src="/static/js/api.js"></script>
+<script src="/static/js/documents_list.js"></script>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %} {% block content %}
+<h2 class="text-2xl font-bold mb-6">Create Document</h2>
+<div class="bg-white shadow-md rounded-lg p-6">
+  <form id="document-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <input
+      type="text"
+      id="title"
+      placeholder="Title"
+      required
+      class="p-2 border rounded"
+    />
+    <input
+      type="text"
+      id="author"
+      placeholder="Author"
+      required
+      class="p-2 border rounded"
+    />
+    <input
+      type="text"
+      id="category"
+      placeholder="Category"
+      required
+      class="p-2 border rounded col-span-full"
+    />
+    <button
+      type="submit"
+      class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 col-span-full"
+    >
+      Create
+    </button>
+  </form>
+</div>
+<script src="/static/js/api.js"></script>
+<script src="/static/js/documents_create.js"></script>
+{% endblock %}
