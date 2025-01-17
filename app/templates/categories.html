@@ -1,0 +1,26 @@
+{% extends "base.html" %} {% block content %}
+<h2 class="text-2xl font-bold mb-6">Manage Categories</h2>
+<div class="bg-white shadow-md rounded-lg p-6">
+  <form id="category-form" class="mb-4">
+    <input
+      type="text"
+      id="category-name"
+      placeholder="Category Name"
+      required
+      class="p-2 border rounded"
+    />
+    <button
+      type="submit"
+      class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+    >
+      Add Category
+    </button>
+  </form>
+
+  <ul id="category-list" class="space-y-2">
+    <!-- Categories will be listed here -->
+  </ul>
+</div>
+<script src="/static/js/api.js"></script>
+<script src="/static/js/categories.js"></script>
+{% endblock %}

@@ -1,5 +1,5 @@
 from flask import Flask
-from app.routes import subscriber_routes, document_routes, loan_routes
+from app.routes import subscriber_routes, document_routes, loan_routes, category_routes
 from app.routes.html_routes import main as html_routes
 
 def create_app():
@@ -9,6 +9,7 @@ def create_app():
     app.register_blueprint(subscriber_routes, url_prefix='/api/subscribers')
     app.register_blueprint(document_routes, url_prefix='/api/documents')
     app.register_blueprint(loan_routes, url_prefix='/api/loans')
+    app.register_blueprint(category_routes, url_prefix='/api/categories')
     app.register_blueprint(html_routes)
     
     return app
